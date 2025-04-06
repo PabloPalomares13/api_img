@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const apiKey = import.meta.env.VITE_SOME_KEY; // Reemplaza con tu clave de API de Pixabay
+const apiKey = import.meta.env.VITE_SOME_KEY;// clave de API de Pixabay
+
+const backendUrl = import.meta.env.PROD 
+  ? 'import.meta.env.VITE_BACKEND_URL'
+  : 'http://localhost:5000';
 
 const fetchImageTags = async (imageUrl) => {
   const response = await fetch(`https://pixabay.com/api/?key=${apiKey}&image_url=${encodeURIComponent(imageUrl)}`);
@@ -37,7 +41,7 @@ const App = () => {
   };
 
   async function saveImage(imageUrl) {
-    const response = await fetch('http://localhost:5000/save-image', {
+    const response = await fetch(`${backendUrl}/save-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
