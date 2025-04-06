@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const apiKey = import.meta.env.VITE_SOME_KEY;// clave de API de Pixabay
 
 const backendUrl = import.meta.env.PROD 
-  ? 'import.meta.env.VITE_BACKEND_URL'
+  ? import.meta.env.VITE_BACKEND_URL
   : 'http://localhost:5000';
 
 const fetchImageTags = async (imageUrl) => {
