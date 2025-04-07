@@ -60,6 +60,25 @@ app.post('/save-image', async (req, res) => {
   }
 });
 
+app.get('/images', async (req, res) => {
+  try {
+    const images = await Image.find();
+
+    const imagesFormatted = images.map(img => ({
+      id: img._id,
+      url:img.url,
+      imageBase64: img.image.toString('base64'),
+      contentType: 'image/jpeg',
+      createdAt: img.createdAt
+    }));
+    res.status(200).json(imagesFormatted);
+  } catch (error) {
+    console.error('error al obtener las imagenes: ',error)
+    res.status(500).json({ message: 'Error al obtener las imagenes'});
+  }
+})
+
+
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

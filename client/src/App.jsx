@@ -15,6 +15,7 @@ const fetchImageTags = async (imageUrl) => {
 const App = () => {
   const [images, setImages] = useState([]);
   const [query, setQuery] = useState('');
+  const [savedImages, setSavedImages] = useState([]);
 
   useEffect(() => {
     fetchDefaultImages();
@@ -57,10 +58,22 @@ const App = () => {
       console.error('Error al guardar la imagen:', data.message);
     }
   }
+   const fetchSavedImages = async () => {
+     try {
+      const response = await fetch(`${backendUrl}/images`);
+      if(!response.ok){
+        throw new Error('Error al obtener las imagenes');
+      }
+      const data = await response.json();
+      setSavedImages(data);
+     } catch (error) {
+      console.error('Error al obtener las imagenes:', error);
+     }
+   }    
   return (
 
     <div id="pixabayApp" className="bg-gray-100 p-8">
-    <h1 className="text-3xl font-bold text-center mb-8">Pixabay Image Search</h1>
+    <h1 className="text-3xl font-bold text-center mb-8">Pixabay Buscador de Imagenes</h1>
   
     <div className="text-center mb-4">
       <input
@@ -74,7 +87,7 @@ const App = () => {
         onClick={searchImages}
         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
       >
-        Search
+        Buscar
       </button>
     </div>
   
@@ -101,12 +114,36 @@ const App = () => {
               onClick={() => saveImage(img.webformatURL)}
               className="mt-2 bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600 w-full"
             >
-              Save Image
+              Guardar Imagen
             </button>
           </div>
         </div>
       ))}
     </div>
+    <div className="text-center mt-10">
+        <button
+          onClick={fetchSavedImages}
+          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        >
+          Mostrar Imagenes Guardadas
+        </button>
+    </div>
+    {savedImages.length > 0 && (
+        <div className="saved-gallery mt-10">
+          <h2 className="text-2xl font-bold text-center mb-4">Imagenes Guardadas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
+            {savedImages.map((img) => (
+              <div key={img.id} className="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <img
+                  src={`data:${img.contentType};base64,${img.imageBase64}`}
+                  alt="Saved"
+                  className="w-full h-96 object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
   </div>
   );
 };
